@@ -1,0 +1,28 @@
+# 隐私凭证与配置（严格防泄漏）
+.env
+.env.*
+!*.example
+
+# 学生作业文件与图片文件（严格防泄漏）
+24104031班热工作业4/
+收件箱邮件附件/
+*.jpg
+*.jpeg
+*.png
+*.gif
+*.pdf
+*.docx
+*.zip
+*.rar
+*.7z
+
+# 临时测试与缓存目录
+scratch/
+tmp/
+*.log
+__pycache__/
+*.py[cod]
+*$py.class
+.system_generated/
+.idea/
+.vscode/
