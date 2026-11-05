@@ -61,7 +61,7 @@ cp .env.example .env
 
 配置您的账号信息：
 ```env
-NJFU_USERNAME=2410403132
+NJFU_USERNAME=24xxxxxxxxxx
 NJFU_PASSWORD=your_password
 NJFU_DOMAIN=njfu.edu.cn
 ```
@@ -115,3 +115,4 @@ client.reply_mail(
 ## 免责声明与安全规范
 
 本项目仅供学术研究、教学管理与自动化收作业等正当用途使用。请妥善保管个人统一身份认证账号与密码，严禁将包含真实学号、密码或同学作业个人信息的配置文件提交至公共代码仓库。
+
