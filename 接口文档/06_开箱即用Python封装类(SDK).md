@@ -87,29 +87,39 @@ class NJFUMailClient:
         self.sid = sid_match.group(1)
         return self.sid
 
-    def get_mail_entries(self, folder_id=1, max_pages=3):
-        """获取邮件条目列表 [(mailid, totime_ms), ...]"""
+    def get_mail_entries(self, folder_id=1, max_pages=3, include_junk=True):
+        """获取邮件条目列表 [(mailid, totime_ms), ...]
+        
+        :param folder_id: 起始文件夹 ID (默认 1 为收件箱，6 为垃圾箱)
+        :param max_pages: 每个文件夹最大扫描页数
+        :param include_junk: 若检索收件箱(folder_id=1)时为 True，将同时自动合并扫描垃圾箱(folder_id=6)
+        """
+        folders = [folder_id]
+        if folder_id == 1 and include_junk:
+            folders.append(6)
+
         entries = []
         seen = set()
-        for page in range(max_pages):
-            time.sleep(0.4)
-            resp = self.session.get(
-                self.MAIL_LIST_URL,
-                params={
-                    "sid": self.sid,
-                    "folderid": str(folder_id),
-                    "page": str(page),
-                    "s": "getmail",
-                }
-            )
-            resp.raise_for_status()
-            matches = re.findall(r'totime="(\d+)"[^>]*name="mailid"\s+value="([^"]+)"', resp.text)
-            if not matches:
-                break
-            for totime, mailid in matches:
-                if mailid not in seen:
-                    seen.add(mailid)
-                    entries.append((mailid, int(totime)))
+        for fid in folders:
+            for page in range(max_pages):
+                time.sleep(0.4)
+                resp = self.session.get(
+                    self.MAIL_LIST_URL,
+                    params={
+                        "sid": self.sid,
+                        "folderid": str(fid),
+                        "page": str(page),
+                        "s": "getmail",
+                    }
+                )
+                resp.raise_for_status()
+                matches = re.findall(r'totime="(\d+)"[^>]*name="mailid"\s+value="([^"]+)"', resp.text)
+                if not matches:
+                    break
+                for totime, mailid in matches:
+                    if mailid not in seen:
+                        seen.add(mailid)
+                        entries.append((mailid, int(totime)))
         return entries
 
     def get_mail_detail(self, mailid):
